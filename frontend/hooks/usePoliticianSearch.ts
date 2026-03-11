@@ -1,9 +1,8 @@
 "use client"
 
 import { useState, useEffect, useCallback, useRef } from "react"
+import { buildApiUrl } from "@/lib/api/base"
 import type { Politician } from "@/types/politician"
-
-const API = `${process.env.NEXT_PUBLIC_API_URL}`
 const DEBOUNCE_MS = 280
 const MIN_QUERY_LENGTH = 2
 
@@ -28,7 +27,9 @@ export function usePoliticianSearch(query: string) {
                 q: trimmed,
                 limit: "10",
             })
-            const res = await fetch(`${API}/politicians/search?${params}`)
+            const res = await fetch(
+                `${buildApiUrl("/politicians/search")}?${params}`
+            )
             const json = await res.json()
             if (json.success && Array.isArray(json.data?.politicians)) {
                 setResults(json.data.politicians as Politician[])

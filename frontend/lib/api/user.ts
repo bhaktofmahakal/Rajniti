@@ -1,5 +1,4 @@
-const API_BASE_URL =
-    process.env.NEXT_PUBLIC_API_URL
+import { buildApiUrl } from "@/lib/api/base"
 
 export interface UserData {
     id?: string
@@ -18,14 +17,7 @@ export const userService = {
      * Used during authentication
      */
     async syncUser(userData: UserData) {
-        console.log("userData", `${API_BASE_URL}/users/sync`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(userData)
-        })
-        const response = await fetch(`${API_BASE_URL}/users/sync`, {
+        const response = await fetch(buildApiUrl("/users/sync"), {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -45,7 +37,7 @@ export const userService = {
      * Used for onboarding and profile updates
      */
     async updateUser(userId: string, data: UserData) {
-        const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
+        const response = await fetch(buildApiUrl(`/users/${userId}`), {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json"
@@ -62,7 +54,7 @@ export const userService = {
     },
 
     async checkUsername(username: string, userId?: string) {
-        const response = await fetch(`${API_BASE_URL}/users/check-username`, {
+        const response = await fetch(buildApiUrl("/users/check-username"), {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

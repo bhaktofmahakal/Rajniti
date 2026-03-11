@@ -129,7 +129,7 @@ NEXTAUTH_URL=http://localhost:3000
 NEXTAUTH_SECRET=your-secret
 GOOGLE_CLIENT_ID=...
 GOOGLE_CLIENT_SECRET=...
-NEXT_PUBLIC_API_URL=http://localhost:8000
+NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
 ```
 
 ### 3. Run
