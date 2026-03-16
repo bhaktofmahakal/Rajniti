@@ -1,14 +1,13 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
+import { buildApiUrl } from "@/lib/api/base"
 import type { Politician } from "@/types/politician"
 import {
     getMyPoliticianIds,
     setMyPoliticianIds,
     type MyPoliticianIds,
 } from "@/lib/myPoliticiansStorage"
-
-const API = `${process.env.NEXT_PUBLIC_API_URL}`
 
 /** Pure: find politician by id in list; returns undefined if not found. */
 export function findPoliticianById(
@@ -22,7 +21,9 @@ export function findPoliticianById(
 /** Fetch a single politician by id (for when not in list). */
 async function fetchPoliticianById(id: string): Promise<Politician | null> {
     try {
-        const res = await fetch(`${API}/politicians/${encodeURIComponent(id)}`)
+        const res = await fetch(
+            buildApiUrl(`/politicians/${encodeURIComponent(id)}`)
+        )
         const json = await res.json()
         if (json.success && json.data) return json.data as Politician
     } catch {
@@ -37,11 +38,6 @@ export function useMyPoliticians(allPoliticians: Politician[]) {
     )
     const [fetchedMP, setFetchedMP] = useState<Politician | null>(null)
     const [fetchedMLA, setFetchedMLA] = useState<Politician | null>(null)
-
-    // Sync from localStorage on mount (e.g. another tab changed it)
-    useEffect(() => {
-        setIds(getMyPoliticianIds())
-    }, [])
 
     const resolveMP = useCallback((): Politician | null => {
         const fromList = findPoliticianById(allPoliticians, ids.mpId)
@@ -59,14 +55,7 @@ export function useMyPoliticians(allPoliticians: Politician[]) {
 
     // When ids point to missing politicians in list, fetch once
     useEffect(() => {
-        if (!ids.mpId) {
-            setFetchedMP(null)
-            return
-        }
-        if (findPoliticianById(allPoliticians, ids.mpId)) {
-            setFetchedMP(null)
-            return
-        }
+        if (!ids.mpId || findPoliticianById(allPoliticians, ids.mpId)) return
         let cancelled = false
         fetchPoliticianById(ids.mpId).then((p) => {
             if (!cancelled) setFetchedMP(p)
@@ -77,14 +66,7 @@ export function useMyPoliticians(allPoliticians: Politician[]) {
     }, [ids.mpId, allPoliticians])
 
     useEffect(() => {
-        if (!ids.mlaId) {
-            setFetchedMLA(null)
-            return
-        }
-        if (findPoliticianById(allPoliticians, ids.mlaId)) {
-            setFetchedMLA(null)
-            return
-        }
+        if (!ids.mlaId || findPoliticianById(allPoliticians, ids.mlaId)) return
         let cancelled = false
         fetchPoliticianById(ids.mlaId).then((p) => {
             if (!cancelled) setFetchedMLA(p)

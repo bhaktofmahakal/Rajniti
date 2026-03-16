@@ -1,9 +1,8 @@
 "use client"
 
 import { useState, useEffect, useCallback, useMemo } from "react"
+import { buildApiUrl } from "@/lib/api/base"
 import type { Politician, ElectionType } from "@/types/politician"
-
-const API = `${process.env.NEXT_PUBLIC_API_URL}`
 
 // ─────────────────────────────────────────────────────────────────────────────
 // usePoliticians — fetch all politicians once, derive everything client-side
@@ -20,7 +19,7 @@ export function usePoliticians(type?: ElectionType) {
             const params = new URLSearchParams({ limit: "1000" })
             if (type) params.set("type", type)
 
-            const res = await fetch(`${API}/politicians?${params}`)
+            const res = await fetch(`${buildApiUrl("/politicians")}?${params}`)
             const json = await res.json()
 
             if (json.success) {
@@ -132,7 +131,9 @@ export function usePolitician(id: string | null) {
         const run = async () => {
             try {
                 setLoading(true)
-                const res = await fetch(`${API}/politicians/${encodeURIComponent(id)}`)
+                const res = await fetch(
+                    buildApiUrl(`/politicians/${encodeURIComponent(id)}`)
+                )
                 const json = await res.json()
                 if (json.success) {
                     setPolitician(json.data)

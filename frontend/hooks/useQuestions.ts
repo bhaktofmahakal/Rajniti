@@ -1,7 +1,5 @@
 import { useState, useEffect, useCallback } from "react"
-
-const API_BASE_URL =
-    process.env.NEXT_PUBLIC_API_URL
+import { buildApiUrl } from "@/lib/api/base"
 
 interface PredefinedQuestion {
     id: string
@@ -41,7 +39,7 @@ export function useQuestions() {
         const fetchQuestions = async () => {
             try {
                 setLoading(true)
-                const response = await fetch(`${API_BASE_URL}/questions`)
+                const response = await fetch(buildApiUrl("/questions"))
                 const data = await response.json()
                 if (data.success) {
                     setQuestions(data.data.questions || [])
@@ -78,7 +76,7 @@ export function useAskQuestion() {
                 setLoading(true)
                 setError(null)
 
-                const response = await fetch(`${API_BASE_URL}/questions/ask`, {
+                const response = await fetch(buildApiUrl("/questions/ask"), {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -123,7 +121,7 @@ export function useAskQuestion() {
                 setLoading(true)
                 setError(null)
 
-                let url = `${API_BASE_URL}/questions/${questionId}/answer?n_results=${nResults}`
+                let url = `${buildApiUrl(`/questions/${questionId}/answer`)}?n_results=${nResults}`
                 if (candidateId) {
                     url += `&candidate_id=${candidateId}`
                 }
