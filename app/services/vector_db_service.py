@@ -58,10 +58,10 @@ class VectorDBService:
             logger.error("VectorDB query failed: %s", exc)
             return []
 
-        ids = raw.get("ids", [[]])[0]
-        docs = raw.get("documents", [[]])[0]
-        metas = raw.get("metadatas", [[]])[0]
-        dists = raw.get("distances", [[]])[0]
+        ids = (raw.get("ids") or [[]])[0]
+        docs = (raw.get("documents") or [[]])[0]
+        metas = (raw.get("metadatas") or [[]])[0]
+        dists = (raw.get("distances") or [[]])[0]
 
         results: List[Dict[str, Any]] = []
         for i, pid in enumerate(ids):

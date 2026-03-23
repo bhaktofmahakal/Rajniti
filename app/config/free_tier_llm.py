@@ -140,12 +140,6 @@ DEFAULT_PROVIDERS: list[dict[str, Any]] = [
     },
     {
         "provider": "groq",
-        "model": "meta-llama/llama-4-scout-17b-16e-instruct",
-        "api_key_env": "GROQ_API_KEY",
-        "base_url": "https://api.groq.com/openai/v1",
-    },
-    {
-        "provider": "groq",
         "model": "openai/gpt-oss-safeguard-20b",
         "api_key_env": "GROQ_API_KEY",
         "base_url": "https://api.groq.com/openai/v1",
